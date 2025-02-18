@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculation Form</title>
+</head>
+<body>
+
+    <h2>Calculator</h2>
+    <form id="calcForm">
+        <label for="input1">Input 1:</label>
+        <input type="text" id="input1" name="input1" required>
+        <br><br>
+
+        <label for="input2">Input 2:</label>
+        <input type="text" id="input2" name="input2" required>
+        <br><br>
+
+        <label for="operation">Operation:</label>
+        <select id="operation" name="operation" required>
+            <option value="plus">+</option>
+            <option value="minus">-</option>
+            <option value="multiply">×</option>
+            <option value="divide">÷</option>
+        </select>
+        <br><br>
+
+        <button type="submit">Calculate</button>
+    </form>
+
+    <h3>Result: <span id="result"></span></h3>
+
+    <script>
+        document.getElementById("calcForm").addEventListener("submit", async function (event) {
+            event.preventDefault(); // Prevent form reload
+
+            const input1 = document.getElementById("input1").value;
+            const input2 = document.getElementById("input2").value;
+            const operation = document.getElementById("operation").value;
+
+            const payload = {
+                input1: input1,
+                input2: input2,
+                operation: operation
+            };
+
+            try {
+                const response = await fetch("https://localhost:7232/api/calculate", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+                document.getElementById("result").textContent = data.result;
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Failed to calculate. Check console for details.");
+            }
+        });
+    </script>
+
+</body>
+</html>
